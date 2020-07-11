@@ -1,6 +1,6 @@
 
 void handle_OnConnect() {
-    publicServer.send(200, "text/html", SendHTML(false)); 
+    publicServer.send(200, "text/html", client_home); 
     Serial.println("client connected");
 }
 void handle_settings_OnConnect() {
