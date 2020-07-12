@@ -1,16 +1,16 @@
 
 void handle_OnConnect() {
-    publicServer.send(200, "text/html", client_home); 
+    publicServer.send(200,"text/html",home_page); 
     Serial.println("client connected");
 }
 void handle_settings_OnConnect() {
-    settingsServer.send(200, "text/html", sendSettings(true,"192312312312313")); 
+    publicServer.send(200, "text/html", sendSettings(true,"192312312312313")); 
     Serial.println("client connected");
 }
 void handleSSIDForm(){
 
-    sta_ssid = settingsServer.arg("ssid");
-    sta_password = settingsServer.arg("pass");
+    sta_ssid = publicServer.arg("ssid");
+    sta_password = publicServer.arg("pass");
     Serial.println(sta_ssid);  
     Serial.println(sta_password);
     Serial.println();
@@ -23,19 +23,21 @@ void handleSSIDForm(){
         
 
     }
-    if(WiFi.status() == WL_CONNECTED){
-      settingsServer.send(200, "text/html", sendSettings(true,WiFi.localIP().toString())); 
-      processing_setup_request = 0;
-    }
-    else
-      settingsServer.send(200, "text/html", sendSettings(true,"No wifi")); 
+
+      publicServer.send(200, "text/html", sendSettings(true,WiFi.localIP().toString())); 
+
+
+
+}
+void testConnect(){
+      publicServer.send(200, "text/html", html);
 
 }
 void handle_NotFound(){
     Serial.println(" Press F");
     publicServer.send(404, "text/plain", "Not found");
 }
-void handle_settings_NotFound(){
-    Serial.println(" Press Fa ");
-    settingsServer.send(404, "text/plain", "Not found");
-}
+//void handle_settings_NotFound(){
+//    Serial.println(" Press Fa ");
+//    oubli.send(404, "text/plain", "Not found");
+//}

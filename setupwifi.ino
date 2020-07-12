@@ -1,16 +1,17 @@
 
 void setupWifi(String ssid,String pass,bool edit_mode){
 
-    WiFi.disconnect(true);
     WiFi.begin(ssid,pass);
     Serial.println("Attempting connection");
     looper=0;
     while(WiFi.status() != WL_CONNECTED) {
         delay(500);
         looper++;
+        publicServer.handleClient();
+
 //        if(looper == 14 && edit_mode!=1)
 //            setupAPN();
-        if(looper>16){
+        if(looper>1){
             break;
         }
         Serial.print(".");
@@ -27,7 +28,10 @@ void setupAPN(){
     IPAddress ap_ip = WiFi.softAPIP();
     Serial.print("Accesspoint ON - IP address: ");
     Serial.println(ap_ip);
-    settingsServer.begin();
-    Serial.print("settings server on");
+//    settingsServer.begin();
+    Serial.print("settings server on at PORT - ");
     apn_status = 1;
+    Serial.println(settings_port);
+    Serial.println(apn_status);
+
 }
