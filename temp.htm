@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <title></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
     <style>
         body {
             font-family: monospace;
@@ -14,6 +14,7 @@
             margin: auto;
             width: 80vw;
             height: fit-content;
+            /* border: solid 1px black; */
             border-radius: 2px;
             box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.75);
             padding: 20px;
@@ -25,21 +26,31 @@
         }
         
         .card_row {
-            width: 100%;
+            width: 80vw;
             display: flex;
             flex-flow: row wrap;
             align-content: space-between;
             justify-content: center;
-            margin-top: 20px;
+            margin: 5px;
+        }
+        
+        .textbox {
+            width: 39vw;
+            border: none;
+            outline: none;
+            text-align: center;
+            text-align: right;
         }
         
         .card_item {
-            width: 32vw;
+            padding-left: 20dp;
+            width: 40vw;
             text-align: left;
         }
         
         .card_item2 {
-            width: 32vw;
+            padding-left: 20dp;
+            width: 40vw;
             text-align: right;
         }
         
@@ -49,95 +60,81 @@
             color: #757575;
             font-size: 50px;
             font-family: monospace;
-            margin-bottom: 20px;
         }
         
-        .textbox {
-            width: 32vw;
-            border: none;
-            outline: none;
-            text-align: center;
-            border-bottom: solid 1px black;
-        }
-        
-        .textbox:focus {
-            border-bottom: black solid 2px;
-        }
-        
-        .set {
-            width: 100px;
-            height: 30px;
-            background-color: white;
-            border: solid 1px black;
-            border-radius: 4px;
-            margin-top: 2vh;
-            font-family: monospace;
-            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+        .resultText {
+            border: none !important;
         }
     </style>
 </head>
 
 <body>
+    <div class="pagehead">Info</div>
     <div class="card">
-        <span class="pagehead">Setup Wifi</span>
-        <form>
-            <div class="card_row">
-                <div class="card_item">Enter SSID </div>
-                <div class="card_item2"><input class="textbox" type="text" name="ssid" id="ssid"></div>
-            </div>
-            <div class="card_row">
-                <div class="card_item"> Password </div>
-                <div class="card_item2"><input type="password" class="textbox" name="pass" id="pass"></div>
-            </div>
-            <div class="card_row"><button id="setBtn" onclick="inputCheck()" type="button" class="set">SET</button></div>
-        </form>
         <div class="card_row">
-            <p id="response">
-                <p>
+            <div class="card_item">SSID</div>
+            <div name="ssid" class="card_item2">
+                <input type="text" class="resultText textbox" id="ssid">
+            </div>
         </div>
+        <div class="card_row">
+            <div class="card_item">Status</div>
+            <div name="ssid" class="card_item2">
+                <input type="text" class="resultText textbox" id="wifiStatus">
+            </div>
+        </div>
+        <div class="card_row">
+            <div class="card_item">IP</div>
+            <div name="ssid" class="card_item2">
+                <input type="text" class="resultText textbox" id="ip">
+            </div>
+        </div>
+
+    </div>
+    <div class="card">
+        <div class="card_row">
+            <div class="card_item">SSID</div>
+            <div name="ssid" class="card_item2">as</div>
+        </div>
+        <div class="card_row">
+            <div class="card_item">SSID</div>
+            <div name="ssid" class="card_item2">as</div>
+        </div>
+        <div class="card_row">
+            <div class="card_item">SSID</div>
+            <div name="ssid" class="card_item2">as</div>
+        </div>
+
     </div>
 
+
     <script>
-        console.log("Asdasdads");
-
-
         const Http = new XMLHttpRequest();
-        var res = document.getElementById("response");
-        var btn = document.getElementById("setBtn")
 
-        function inputCheck() {
+        var ssidField = document.getElementById("ssid")
+        var ipField = document.getElementById("ip")
+        var statusField = document.getElementById("wifiStatus")
 
-            var ssid = document.getElementById("ssid");
-            var pass = document.getElementById("pass");
-            console.log("inside");
-            if ((ssid.value.length != 0)) {
-                if ((pass.value).length != 0) {
-                    console.log("sdf");
+        setInterval(verifyIp(), 10000);
 
-                    sendValues(ssid.value, pass.value);
-                } else {
-                    pass.style.borderColor = "red";
-                }
-            } else {
-                ssid.style.borderColor = "red";
-            }
-            return false
-        }
-
-        function sendValues(ss_id, pa_ss) {
-            Http.open("POST", "/setSSID", true)
-            btn.style.innerHTML = "resetting.."
-            btn.disabled = true
-            var data = new FormData();
-            data.append("ssid", ss_id)
-            data.append("pass", pa_ss)
-            Http.send(data);
+        function verifyIp() {
+            Http.open("GET", "/checkSSID", true)
+            Http.send();
         }
         Http.onreadystatechange = (e) => {
-            btn.disabled = false
-
-            console.log(Http.responseText)
-            res.innerHTML = Http.responseText;
+            console.log(Http.responseText.toString())
+            var str = Http.responseText.toString()
+            var credentials = str.split("~")
+            var wifistatus;
+            if (credentials[1] == "3")
+                wifistatus = "Connected"
+            else if (credentials[1] == "2")
+                wifistatus = "ssid unavailable"
+            else
+                wifistatus = "Connection Failed"
+            statusField.value = wifistatus
+            ssidField.value = credentials[0]
+            ipField.value = credentials[2]
         }
     </script>
 </body>
