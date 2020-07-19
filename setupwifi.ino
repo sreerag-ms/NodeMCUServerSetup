@@ -1,7 +1,7 @@
 
-void setupWifi(String ssid,String pass,bool edit_mode){
+void setupWifi(bool edit_mode){
 
-    WiFi.begin(ssid,pass);
+    WiFi.begin(readSsid(),readPassword());
     Serial.println("Attempting connection");
     looper=0;
     while(WiFi.status() != WL_CONNECTED) {
@@ -11,7 +11,7 @@ void setupWifi(String ssid,String pass,bool edit_mode){
 
 //        if(looper == 14 && edit_mode!=1)
 //            setupAPN();
-        if(looper>10){
+        if(looper>1){
             break;
         }
         Serial.print(".");
@@ -23,6 +23,7 @@ void setupWifi(String ssid,String pass,bool edit_mode){
     Serial.print("IP address:\t");
     Serial.println(WiFi.localIP());
     publicServer.begin();
+    Serial.println(readSsid() + readPassword());
 }
 void setupAPN(){
     WiFi.softAP(ssid,password);

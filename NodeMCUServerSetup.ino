@@ -5,8 +5,8 @@
   #include <WiFi.h>
   #include <AsyncTCP.h>
 #else
-  #include <ESP8266WiFi.h>
-  #include <ESPAsyncTCP.h>
+    #include <ESP8266WiFi.h>
+    #include <ESPAsyncTCP.h>
 #endif
 #include "index.h"
 
@@ -22,8 +22,8 @@ IPAddress sta_dns(8,8,8,8);
 const char * test = "TEST";
 String ssid = "ravenClow";
 String password = "ba ba ba";
-String sta_ssid = "raven";
-String sta_password = "ba ba ba";  
+String sta_ssid = "";
+String sta_password = "";  
 const int settings_port = 80;
 unsigned char event[25][5] = {10,10,25,20,5,9,35,10,20,5},event_p = 2;
 uint8_t ev_h,ev_m,ev_1,ev_2,ev_3;
@@ -44,30 +44,29 @@ char home_page[5000];
 char reset_page[5000];
 ///ESP8266WebServer settingsServer(local_ip,settings_port);
 AsyncWebServer publicServer(80);
+Ticker tick;
 
 
 
 
 void setup() {
 //  snprintf_P(html, sizeof(/html), testPage);
-  snprintf_P(home_page, sizeof(home_page), homePage);
-  snprintf_P(reset_page, sizeof(reset_page), resetPage);
-  pack_events();
+    snprintf_P(home_page, sizeof(home_page), homePage);
+    snprintf_P(reset_page, sizeof(reset_page), resetPage);
+    pack_events();
+    loadEeprom();
     Serial.begin(115200);
     WiFi.mode(WIFI_AP_STA);
-//    WiFi.config(sta_ip_static, sta_sub/net, sta_gateway, sta_dns);    
+//    WiFi.config(sta_ip_stat ic, sta_sub/net, sta_gateway, sta_dns);    
 //    publicServer.on("/test", testConnect);
-  serverSetup();
+    serverSetup();
     publicServer.begin();
+    tick.attach(10, wifiTicker); 
 }
 
 
-
 void loop() {
-    if(WiFi.status() != WL_CONNECTED && apn_status ==0){
-      
-        setupWifi(sta_ssid,sta_password,0);
-
+    if(WiFi.status() != WL_CONNECTED){
         if(WiFi.status() != WL_CONNECTED && apn_status == 0){ 
             Serial.println("Wifi not available turning on APN, wifistatus = ");
             Serial.println(WiFi.status());
@@ -89,5 +88,5 @@ void loop() {
 //    if(apn_status==1)
 //      settingsServer.handleClient();
 
-    
+
 }

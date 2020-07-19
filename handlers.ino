@@ -17,9 +17,11 @@ void serverSetup(){
         Serial.println();
         WiFi.disconnect(true);
         if(!processing_setup_request){
+            writeWifiData(sta_ssid,sta_password);
             Serial.println(sta_password);
             processing_setup_request = 1;
-            setupWifi(sta_ssid,sta_password,1);
+            writeWifiData(sta_ssid,sta_password);
+            setupWifi(1);
             request->send(200, "text/plain",WiFi.localIP().toString());
             Serial.println(sta_password);
          }
