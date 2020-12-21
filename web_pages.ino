@@ -1,17 +1,5 @@
 
-//String SendHTML(uint8_t led){
-//    String ptr = "<!DOCTYPE html>\n";
-//    ptr +="<html>\n";
-//    ptr +="<head>\n";
-//    ptr +="<title>client</title>\n";
-//    ptr +="</head>\n";
-//    ptr +="<body>\n";
-//    ptr +="<h1>Client Web page</h1>\n";
-//    ptr +="<p>Hai Raven.</p>\n";
-//    ptr +="</body>\n";
-//    ptr +="</html>\n";
-//    return ptr;
-//}
+
 
 String sendSettings(uint8_t led,String ip){
     String ptr = "<!DOCTYPE html><html lang=\"en\"><head><title></title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body>";

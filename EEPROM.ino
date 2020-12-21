@@ -1,9 +1,5 @@
 void loadEeprom(){
   EEPROM.begin(512);
-  
-
-
-
 
 }
 void writeWifiData(String ssid,String pass){
@@ -23,7 +19,7 @@ void writeWifiData(String ssid,String pass){
         i = pass[addr-33];    
     }while(i!='\0');
     EEPROM.write(addr,i);
-    Serial.println(ssid + "written to eeprom  "+ readSsid());
+    Serial.println(ssid + "written to eeprom  !!! "+ readSsid());
 }
 String readSsid(){
     String ssid="";

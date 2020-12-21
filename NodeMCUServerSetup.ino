@@ -29,6 +29,12 @@ unsigned char event[25][5] = {10,10,25,20,5,9,35,10,20,5},event_p = 2;
 uint8_t ev_h,ev_m,ev_1,ev_2,ev_3;
 char html[5000];
 String options = "";
+struct event{
+  String name,time;
+  int num1,num2,num3;
+}eventList[20];
+struct event temp;
+int eventCount=0;
 
 const char* PARAM_INPUT_1 = "evTime";
 const char* PARAM_INPUT_2 = "evNo1";
@@ -40,7 +46,7 @@ int looper =0 ;
 bool edit_key=1;
 bool processing_setup_request = 0;
 //char html[5000];/
-char home_page[5000];
+char* home_page;
 char reset_page[5000];
 ///ESP8266WebServer settingsServer(local_ip,settings_port);
 AsyncWebServer publicServer(80);

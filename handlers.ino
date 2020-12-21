@@ -28,9 +28,38 @@ void serverSetup(){
         Serial.println(sta_password);
 
       });
+      publicServer.on("/check_events", HTTP_GET, [](AsyncWebServerRequest *request){
+            Serial.println("fallen for check_events");
+            String response="";
+            for(int i =0;i<eventCount;i++){
+              response+=(eventList[i].name+"`"+eventList[i].time+"`");
+              response+=(String(eventList[i].num1)+"`"+String(eventList[i].num2)+"`"+String(eventList[i].num3)+"~");
+            }
+            response+="\^";
+            request->send(201, "text/plain",response);
+
+  });
+        publicServer.on("/add_event", HTTP_POST, [](AsyncWebServerRequest *request){
+           if (request->hasParam("time",true)){
+            Serial.println("fallen");
+            eventList[eventCount].name = request->getParam("name",true)->value();
+            eventList[eventCount].time = request->getParam("time",true)->value();
+            eventList[eventCount].num1 = request->getParam("ev1",true)->value().toInt();
+            eventList[eventCount].num2 = request->getParam("ev2",true)->value().toInt();
+            eventList[eventCount].num3 = request->getParam("ev3",true)->value().toInt();
+            Serial.println(eventList[eventCount].name);
+            Serial.println(eventList[eventCount].time);
+            Serial.println(eventList[eventCount].num1);
+
+            eventCount++;
+            request->send(200, "text/plain","success");
+            Serial.println("count = " + String(eventCount));
+        }
+  });
     publicServer.on("/checkSSID",HTTP_GET, [](AsyncWebServerRequest *request){    
         Serial.println(" in checkSSID");
         request->send(200, "text/plain",sta_ssid + " ~" +WiFi.status()+ "~ " + WiFi.localIP().toString());
+
 
         
         });
